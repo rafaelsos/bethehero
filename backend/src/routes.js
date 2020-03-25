@@ -1,25 +1,25 @@
 const express = require('express');
-const crypto = require('crypto');
+
+const OngController = require('./controllers/OngController');
 
 const routes = express.Router();
 
-const connection = require('./database/connection');
-
-routes.post('/ongs', async (request, response) => {
-  const { name, email, whatsapp, city, uf } = request.body;
-  
-  const id = crypto.randomBytes(4).toString('HEX');
-
-  await connection('ongs').insert({
-    id, 
-    name, 
-    email, 
-    whatsapp, 
-    city, 
-    uf 
-  });
-
-  return response.json({ id });
-});
+routes.get('/ongs', OngController.index);
+routes.post('/ongs', OngController.create);
 
 module.exports = routes;
+
+
+/**
+ * 
+  - Funcionalidades
+	- Login de ONG
+	- Logout de ONG
+	- Cadastro de ONG - ok
+	- Cadastrar novos casos
+  - Deletar casos
+  - Listar ONGs - ok 
+	- Listar casos específicos de uma ONG
+	- Listar todos os casos
+	- Entrar em contato com a ONG
+ */
