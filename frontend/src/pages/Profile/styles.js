@@ -101,6 +101,9 @@ export const ListIncidents = styled.ul`
   }
 
   p {
+    width: 100%;
+    max-width: 500px;
+    word-wrap: break-word;
     color: #737380;
     line-height: 21px;
     font-size: 16px;
