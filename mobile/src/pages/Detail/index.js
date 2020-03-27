@@ -1,8 +1,8 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, Linking } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import * as MailComposer from 'expo-mail-composer';
 
 import {
   Container,
@@ -23,14 +23,36 @@ import logoImg from '../../assets/logo.png';
 
 export default function Detail() {
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const { incident } = route.params;
+
+  const message = `Olá ${
+    incident.name
+  }, estou entrando em contato pois gostaria de ajudar no caso "${
+    incident.title
+  }" com ${Intl.NumberFormat('pr-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(incident.value)}`;
 
   function navigateToIncidents() {
     navigation.goBack();
   }
 
-  function sendMail() {}
+  function sendMail() {
+    MailComposer.composeAsync({
+      subject: `Herói do caso: ${incident.title}`,
+      recipients: [incident.email],
+      body: message,
+    });
+  }
 
-  function sendWhatsApp() {}
+  function sendWhatsApp() {
+    Linking.openURL(
+      `whatsapp://send?phone=+55${incident.whatsapp}&text=${message}`
+    );
+  }
 
   return (
     <Container>
@@ -43,13 +65,20 @@ export default function Detail() {
 
       <Incident>
         <Property style={{ marginTop: 0 }}>ONG:</Property>
-        <Value>dasdasdas</Value>
+        <Value>
+          {incident.name} de {incident.city} - {incident.uf}
+        </Value>
 
         <Property>CASO:</Property>
-        <Value>Cadelinha atropelada</Value>
+        <Value>{incident.title}</Value>
 
         <Property>VALOR:</Property>
-        <Value>R$ 120,00</Value>
+        <Value>
+          {Intl.NumberFormat('pr-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(incident.value)}
+        </Value>
       </Incident>
 
       <Actions>
@@ -60,9 +89,9 @@ export default function Detail() {
 
         <Buttons>
           <ActionButtons>
-            <TextButton>WhatsApp</TextButton>
+            <TextButton onPress={sendWhatsApp}>WhatsApp</TextButton>
           </ActionButtons>
-          <ActionButtons>
+          <ActionButtons onPress={sendMail}>
             <TextButton>E-mail</TextButton>
           </ActionButtons>
         </Buttons>

@@ -38,7 +38,7 @@ export const Description = styled.Text`
 `;
 
 export const List = styled.FlatList.attrs({
-  showsVerticalScrollIndicator: false,
+  showsVerticalScrollIndicator: true,
 })`
   margin-top: 10px;
 `;
